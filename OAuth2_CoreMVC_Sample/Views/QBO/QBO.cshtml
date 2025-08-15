@@ -4,6 +4,13 @@
 @{
 }
 
+@* <a asp-controller="QBO" asp-action="PrepareWebhookRegistration"> *@
+@*     <div> *@
+@*         <input type="submit" name="webhookBtn" value="Register Webhooks"/> *@
+@*     </div> *@
+@* </a> *@
+@* <br/> *@
+
 <a asp-controller="QBO" asp-action="CreateCustomer">
     <div>
         <input type="submit" name="customerBtn" value="Create Customer"/>
@@ -21,11 +28,48 @@
             <input type="submit" name="invoiceBtn" value="Create Invoice"/>
         </div>
     </a>
+    
+    
+   
+    <br/>
+    @if (ViewData["InvoiceInfo"] != null)
+    {
+        @Html.Raw(ViewData["InvoiceInfo"])
+        <a asp-controller="QBO" asp-action="CreatePayment" asp-route-customerId="@ViewData["CustomerId"]" asp-route-invoiceId="@ViewData["InvoiceId"]">
+            <div>
+                <input type="submit" name="paymentBtn" value="Create Payment"/>
+            </div>
+        </a>
+    }
+
 }
 <br/>
 
-
-@if (ViewData["InvoiceInfo"] != null)
+<br/>
+@if (ViewData["PaymentId"] != null)
 {
-    @Html.Raw(ViewData["InvoiceInfo"])
+    @Html.Raw(ViewData["PaymentInfo"])
+    <a asp-controller="QBO" asp-action="VoidPayment" asp-route-paymentId="@ViewData["PaymentId"]">
+        <div>
+            <input type="submit" name="voidBtn" value="Void Payment"/>
+        </div>
+    </a>
 }
+
+@if (ViewData["WebhookInfo"] != null)
+{
+    @Html.Raw(ViewData["WebhookInfo"])
+}
+@if (ViewData["TokensInfo"] != null)
+ {
+     <h3>Connected Merchant Companies</h3>
+     <ul>
+         @foreach (var tokenInfo in ((List<(string RealmId, string TokenSummary)>?)ViewData["TokensInfo"]) ?? new List<(string, string)>())
+         {
+             <li>
+                 RealmId: @tokenInfo.RealmId, Token: @tokenInfo.TokenSummary
+                 <a asp-controller="QBO" asp-action="RevokeMerchant" asp-route-realmId="@tokenInfo.RealmId">Revoke</a>
+             </li>
+         }
+     </ul>
+ }

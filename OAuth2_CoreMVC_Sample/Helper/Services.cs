@@ -24,7 +24,7 @@ namespace OAuth2_CoreMVC_Sample.Helper
 
         /// <summary>
         ///     Test QBO api call
-        /// </summary>
+        /// </summary>cru23x723
         /// <param name="apiCallFunction"></param>
         public async Task QBOApiCall(Action<ServiceContext> apiCallFunction)
         {

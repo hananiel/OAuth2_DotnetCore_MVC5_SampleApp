@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +40,10 @@ namespace OAuth2_CoreMVC_Sample
             services.AddSingleton(provider => Configuration);
 
             services.AddControllersWithViews();
-            
+
+            services.AddSingleton(_=> WebhookDataStore.Instance);
+            services.AddHttpClient();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +67,11 @@ namespace OAuth2_CoreMVC_Sample
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "paymentRoute",
+                    pattern: "{controller}/{action}/{id}/{invoiceId?}",
+                    defaults: new { controller = "Home", action = "Index" });
+                
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
